@@ -1,10 +1,12 @@
 const imap = require('imap')
+const mailParser = require('mailparser').simpleParser
 
 class Rtteo {
-  constructor (config, callback, mailer = null) {
+  constructor (config, callback, mailer = null, parser = null) {
     this.config = config
     this.callback = callback
     this.mailer = mailer || imap
+    this.parser = parser || mailParser
     this.inbox = null
     this.latest_email = null
   }
@@ -32,7 +34,7 @@ class Rtteo {
       if (err) return this._onError(err)
 
       const buffer = this.inbox.seq.fetch('*:*', {
-        bodies: 'HEADER.FIELDS (SUBJECT)',
+        bodies: '',
         markSeen: true,
         struct: true
       })
@@ -53,19 +55,20 @@ class Rtteo {
       })
 
       stream.once('end', () => {
-        const subject = this.mailer.parseHeader(body).subject
-        this._analyseSubject(subject[0])
+        this.parser(body)
+          .then(email => this._analyseSubject(email))
+          .catch(err => this._onError(err))
       })
     })
   }
 
-  _analyseSubject (subject) {
+  _analyseSubject (email) {
     Object.keys(this.config.subjects).forEach(key => {
       const regex = this.config.subjects[key]
-      const matches = subject.match(regex)
+      const matches = email.subject.match(regex)
 
       if (matches) {
-        return this.callback(key, matches)
+        return this.callback(email, key, matches)
       }
     })
   }

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "imap": "^0.8.19",
+    "mailparser": "^2.3.4",
     "nodemailer": "^4.6.8",
     "ws": "^6.1.0"
   },
