@@ -21,6 +21,6 @@
     "ws": "^6.1.0"
   },
   "scripts": {
-    "lint": "eslint"
+    "lint": "eslint ."
   }
 }
