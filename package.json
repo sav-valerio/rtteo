@@ -1,0 +1,26 @@
+{
+  "name": "rtteo",
+  "version": "0.1.0",
+  "description": "A library to create daemons which do some operations based on some emails' objects.",
+  "main": "index.js",
+  "repository": "git@github.com:domcorvasce/rtteo",
+  "author": "Dom Corvasce <dom.corvasce@yandex.com>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "eslint": "^5.6.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^23.6.0"
+  },
+  "dependencies": {
+    "imap": "^0.8.19",
+    "nodemailer": "^4.6.8",
+    "ws": "^6.1.0"
+  },
+  "scripts": {
+    "lint": "eslint"
+  }
+}
