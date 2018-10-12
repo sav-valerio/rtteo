@@ -1,6 +1,6 @@
 # rtteo
 
-A Node library which listens to your mailbox and it triggers a callback when certain subjects are matched.
+A very minimal and lightweight mail listener written in Node.
 
 ## Usage
 
