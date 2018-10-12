@@ -16,6 +16,7 @@
     "jest": "^23.6.0"
   },
   "dependencies": {
+    "config": "^2.0.1",
     "imap": "^0.8.19",
     "mailparser": "^2.3.4",
     "nodemailer": "^4.6.8",
