@@ -48,7 +48,9 @@ class Rtteo {
   }
 
   _onMessage (message, seqno) {
-    if (this.latest_email === seqno) { return }
+    if (this.latest_email === seqno) {
+      return
+    }
     this.latest_email = seqno
 
     message.on('body', (stream, info) => {
@@ -60,7 +62,14 @@ class Rtteo {
 
       stream.once('end', () => {
         this.parser(body)
-          .then(email => this._analyseSubject(email))
+          .then(email => {
+            // if no subjects are defined, just execute the callback
+            if (!('subject' in this.config)) {
+              return this.callback(email)
+            }
+
+            return this._analyseSubject(email)
+          })
           .catch(err => this._onError(err))
       })
     })
