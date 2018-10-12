@@ -1,82 +1,91 @@
-const imap = require('imap')
-const mailParser = require('mailparser').simpleParser
+const imap = require("imap");
+const mailParser = require("mailparser").simpleParser;
 
 class Rtteo {
-  constructor (config, callback, mailer = null, parser = null) {
-    this.config = config
-    this.callback = callback
-    this.mailer = mailer || imap
-    this.parser = parser || mailParser
-    this.inbox = null
-    this.latest_email = null
+  constructor(config, callback, mailer = null, parser = null) {
+    this.config = config;
+    this.callback = callback;
+    this.mailer = mailer || imap;
+    this.parser = parser || mailParser;
+    this.inbox = null;
+    this.latest_email = null;
   }
 
   /**
    * Connects to the mailbox via IMAP.
    */
-  connect () {
+  connect() {
     this.inbox = this.mailer({
       user: this.config.email,
       password: this.config.password,
-      host: 'imap.gmail.com',
+      host: "imap.gmail.com",
       port: 993,
       tls: true
-    })
+    });
 
-    this.inbox.once('ready', this._openInbox.bind(this))
-    this.inbox.on('mail', this._openInbox.bind(this))
-    this.inbox.once('error', this._onError)
-    this.inbox.connect()
+    this.inbox.once("ready", this._openInbox.bind(this));
+    this.inbox.on("mail", this._openInbox.bind(this));
+    this.inbox.once("error", this._onError);
+    this.inbox.connect();
   }
 
-  _openInbox () {
-    this.inbox.openBox('INBOX', true, (err, _) => {
-      if (err) return this._onError(err)
+  _openInbox() {
+    this.inbox.openBox("INBOX", true, (err, _) => {
+      if (err) return this._onError(err);
 
-      const buffer = this.inbox.seq.fetch('*:*', {
-        bodies: '',
+      const buffer = this.inbox.seq.fetch("*:*", {
+        bodies: "",
         markSeen: true,
         struct: true
-      })
+      });
 
-      buffer.on('message', this._onMessage.bind(this))
-    })
+      buffer.on("message", this._onMessage.bind(this));
+    });
   }
 
-  _onMessage (message, seqno) {
-    if (this.latest_email === seqno) { return }
-    this.latest_email = seqno
+  _onMessage(message, seqno) {
+    if (this.latest_email === seqno) {
+      return;
+    }
+    this.latest_email = seqno;
 
-    message.on('body', (stream, info) => {
-      let body = ''
+    message.on("body", (stream, info) => {
+      let body = "";
 
-      stream.on('data', chunk => {
-        body += chunk.toString('utf8')
-      })
+      stream.on("data", chunk => {
+        body += chunk.toString("utf8");
+      });
 
-      stream.once('end', () => {
+      stream.once("end", () => {
         this.parser(body)
-          .then(email => this._analyseSubject(email))
-          .catch(err => this._onError(err))
-      })
-    })
+          .then(email => {
+            // if no subjects are defined, just execute the callback
+            if (!("subject" in this.config)) {
+              return this.callback(email, key);
+            }
+
+            return this._analyseSubject(email);
+          })
+          .catch(err => this._onError(err));
+      });
+    });
   }
 
-  _analyseSubject (email) {
+  _analyseSubject(email) {
     Object.keys(this.config.subjects).forEach(key => {
-      const regex = this.config.subjects[key]
-      const matches = email.subject.match(regex)
+      const regex = this.config.subjects[key];
+      const matches = email.subject.match(regex);
 
       if (matches) {
-        return this.callback(email, key, matches)
+        return this.callback(email, key, matches);
       }
-    })
+    });
   }
 
-  _onError (err) {
-    console.log('Unable to connect to the mailbox:')
-    console.log(err)
+  _onError(err) {
+    console.log("Unable to connect to the mailbox:");
+    console.log(err);
   }
 }
 
-module.exports = { Rtteo }
+module.exports = { Rtteo };
