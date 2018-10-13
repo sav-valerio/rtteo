@@ -1,6 +1,10 @@
 const imap = require('imap')
 const mailParser = require('mailparser').simpleParser
 
+/* Load mail servers generic config */
+const config = require('config')
+const mailServers = config.get('mailServers')
+
 class Rtteo {
   constructor (config, callback, mailer = null, parser = null) {
     this.config = config
@@ -18,9 +22,9 @@ class Rtteo {
     this.inbox = this.mailer({
       user: this.config.email,
       password: this.config.password,
-      host: 'imap.gmail.com',
-      port: 993,
-      tls: true
+      host: mailServers.get(this.config.provider + '.host'),
+      port: mailServers.get(this.config.provider + '.port'),
+      tls: mailServers.get(this.config.provider + '.tls')
     })
 
     this.inbox.once('ready', this._openInbox.bind(this))

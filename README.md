@@ -10,7 +10,9 @@ const { Rtteo } = require('rtteo')
 // An email with a subject like 'Alarm from: ets XYZ Corp' will result in:
 // Type: alarm, Company: XYZ Corp.
 const rtteo = new Rtteo({
-  email: 'john.doe@example.com',
+  // You can define whatever mail provider you like editing the config/default.json file
+  provider: 'gmail',
+  email: 'john.doe@gmail.com',
   password: 'password',
   subjects: {
     alarm: new RegExp('Alarm from: ets (.*)'),

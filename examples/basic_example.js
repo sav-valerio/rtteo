@@ -1,7 +1,8 @@
 const { Rtteo } = require('./../index')
 
 const rtteo = new Rtteo({
-  email: 'john.doe@example.com',
+  provider: 'gmail',
+  email: 'john.doe@gmail.com',
   password: 'password',
   subjects: {
     alarm: new RegExp('Alarm from: ets (.*)'),

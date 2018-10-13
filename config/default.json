@@ -1,0 +1,14 @@
+{
+ "mailServers": {
+     "gmail": {
+        "host": "imap.gmail.com",
+        "port": "993",
+        "tls": true
+     },
+     "outlook": {
+        "host": "imap-mail.outlook.com",
+        "port": "993",
+        "tls": true
+     }
+    }     
+}
