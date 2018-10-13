@@ -11,7 +11,7 @@ const { Rtteo } = require('rtteo')
 // Type: alarm, Company: XYZ Corp.
 const rtteo = new Rtteo({
   // You can define whatever mail provider you like editing the config/default.json file
-  provider: 'gmail'
+  provider: 'gmail',
   email: 'john.doe@gmail.com',
   password: 'password',
   subjects: {
