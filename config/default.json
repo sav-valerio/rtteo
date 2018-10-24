@@ -19,6 +19,16 @@
             "host": "imap.mail.ru",
             "port": "993",
             "tls": true
+        },
+        "yahoo": {
+            "host": "imap.mail.yahoo.com",
+            "port": "993",
+            "tls": true
+        },
+        "mail.com": {
+            "host": "imap.mail.com",
+            "port": "993",
+            "tls": true
         }
     }
 }
